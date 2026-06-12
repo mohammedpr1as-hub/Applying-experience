@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudan Store - المتجر الرسمي</title>
+    <link rel="icon" href="https://i.postimg.cc/2SVL4q50/white-logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #b386ff;
+            --secondary: #d8a4ff;
+            --glass: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.15);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(160, 0, 255, 0.2);
+            --capsule-radius: 100px;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: #0a0010;
+            min-height: 100vh;
+            padding-top: 120px;
+            scroll-behavior: smooth;
+            color: #fff;
+            position: relative;
+        }
+        /* خلفية متحركة خفيفة */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(180, 130, 255, 0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 20%, rgba(200, 100, 255, 0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse at 50% 80%, rgba(160, 50, 255, 0.1) 0%, transparent 60%);
+            z-index: 0;
+            animation: bgPulse 8s infinite alternate;
+        }
+        @keyframes bgPulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* تأثير الظهور */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== الشريط العلوي (كبسولة ثابتة) ========== */
+        .top-bar {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 25px;
+            width: 94%;
+            max-width: 1300px;
+            border-radius: var(--capsule-radius);
+            background: rgba(15, 5, 30, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7), 0 0 70px rgba(180, 100, 255, 0.3);
+            direction: rtl;
+        }
+        .logo img {
+            height: 50px;
+            filter: drop-shadow(0 0 15px var(--primary));
+            animation: logoBounce 0.8s ease-out;
+        }
+        @keyframes logoBounce {
+            0% { transform: translateY(-60px); opacity: 0; }
+            60% { transform: translateY(8px); }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: 0.3s;
+            min-width: 180px;
+        }
+        .search input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            width: 100%;
+            font-size: 14px;
+        }
+        .search input::placeholder { color: #bbb; }
+        .search:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(180, 100, 255, 0.5);
+        }
+        select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            outline: none;
+        }
+        select option { background: #1a0a2e; color: #fff; }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-size: 18px;
+        }
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 25px rgba(200, 100, 255, 0.9);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .trial-badge {
+            position: absolute;
+            bottom: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffc107;
+            color: #000;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+        .icon-btn:hover .trial-badge { opacity: 1; }
+
+        /* ========== شريط الصور الكبسولي (جديد) ========== */
+        .capsule-slider {
+            position: relative;
+            z-index: 10;
+            width: 88%;
+            max-width: 1200px;
+            margin: 30px auto 40px;
+            border-radius: 60px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 80px rgba(180,100,255,0.4);
+            border: 2px solid rgba(255,255,255,0.2);
+            background: #000;
+            height: 280px;
+        }
+        .capsule-slides {
+            display: flex;
+            height: 100%;
+            transition: transform 0.7s ease-in-out;
+        }
+        .capsule-slides img {
+            min-width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .capsule-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .capsule-dots span {
+            width: 10px;
+            height: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .capsule-dots span.active {
+            background: var(--secondary);
+            box-shadow: 0 0 10px var(--secondary);
+            width: 28px;
+            border-radius: 10px;
+        }
+
+        /* ========== المنتجات ========== */
+        .products-section {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+        .products-row {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 22px;
+            padding-bottom: 15px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) #2a0a3a;
+        }
+        .products-row::-webkit-scrollbar { height: 6px; }
+        .products-row::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        .product-card {
+            flex: 0 0 270px;
+            scroll-snap-align: start;
+            border-radius: 28px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: var(--shadow);
+            transition: transform 0.4s, box-shadow 0.4s;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 80px rgba(200,80,255,0.7);
+        }
+        .qty-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 6;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            padding: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .product-card:hover .qty-controls { opacity: 1; }
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .qty-btn:hover { background: rgba(255,255,255,0.5); }
+        .qty-val { font-weight: bold; color: #fff; }
+
+        .product-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+        .product-card:hover img { transform: scale(1.04); }
+        .card-content { padding: 14px; }
+        .product-title {
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(to left, #fff, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .price { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
+        .new-price { color: var(--secondary); font-weight: bold; font-size: 19px; }
+        .old-price { color: #aaa; text-decoration: line-through; font-size: 13px; }
+        .desc { font-size: 12px; color: #ccc; margin-bottom: 12px; }
+        .buy-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #5b21b6, #9333ea, #ec4899);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(168,85,247,0.5);
+        }
+        .buy-btn:hover { box-shadow: 0 0 35px rgba(192,100,255,0.9); }
+
+        /* ========== الفوتر ========== */
+        .footer {
+            position: relative;
+            z-index: 10;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(25px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 25px;
+            text-align: center;
+            animation: fadeInUp 0.8s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .payment-icons img { height: 40px; margin: 10px 8px; filter: drop-shadow(0 0 8px var(--primary)); }
+        .developer-credit { font-size: 14px; opacity: 0.8; margin-top: 12px; }
+
+        /* ========== زر إنستغرام ========== */
+        .instagram-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 5000;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 30px #d6249f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 26px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: floatPulse 2s infinite;
+        }
+        .instagram-float:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 50px #d6249f;
+        }
+        @keyframes floatPulse {
+            0% { box-shadow: 0 0 0 0 rgba(214,36,159,0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(214,36,159,0); }
+            100% { box-shadow: 0 0 0 0 rgba(214,36,159,0); }
+        }
+
+        /* ========== السلة ========== */
+        .cart {
+            position: fixed;
+            right: -430px;
+            top: 0;
+            width: 400px;
+            height: 100%;
+            background: rgba(15,5,30,0.97);
+            backdrop-filter: blur(40px);
+            z-index: 3000;
+            transition: right 0.4s ease;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-left: 2px solid rgba(255,255,255,0.2);
+            border-radius: 30px 0 0 30px;
+        }
+        .cart.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 20px; }
+        .cart-header .close { cursor: pointer; font-size: 28px; color: #ff7b7b; }
+        .trial-notice {
+            background: #ffc107; color: #000; font-weight: bold; padding: 8px 15px; border-radius: 30px;
+            font-size: 14px; text-align: center; margin-bottom: 12px;
+        }
+        .cart-body { flex: 1; overflow-y: auto; }
+        .item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.08); padding: 10px; border-radius: 14px; margin-bottom: 8px;
+        }
+        .item .qty { display: flex; gap: 8px; align-items: center; }
+        .item .qty button {
+            background: rgba(255,255,255,0.2); border: none; color: #fff; width: 26px; height: 26px;
+            border-radius: 50%; cursor: pointer; font-weight: bold;
+        }
+        .total {
+            text-align: center; font-size: 18px; font-weight: bold;
+            background: rgba(255,255,255,0.1); padding: 10px; border-radius: 14px; margin: 12px 0;
+        }
+        .payment-methods { display: flex; justify-content: center; gap: 25px; margin: 12px 0; }
+        .payment-methods label { cursor: pointer; font-size: 15px; display: flex; align-items: center; gap: 5px; }
+        .payment-methods input { accent-color: #b845ff; width: 17px; height: 17px; }
+
+        .btn {
+            display: block; text-align: center; padding: 13px; border-radius: 40px;
+            color: #fff; text-decoration: none; font-weight: bold; transition: 0.3s; font-size: 16px;
+        }
+        .telegram { background: #229ED9; }
+        .telegram:hover { box-shadow: 0 0 25px #229ED9; }
+
+        /* ========== نافذة تسجيل الدخول ========== */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
+            z-index: 4000; display: none; align-items: center; justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .login-modal-box {
+            background: rgba(15,5,30,0.95); backdrop-filter: blur(45px); border-radius: 40px; padding: 35px;
+            width: 400px; border: 2px solid rgba(255,255,255,0.25);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 90px rgba(180,50,255,0.5); position: relative;
+        }
+        .close-modal {
+            position: absolute; top: 15px; right: 15px; font-size: 28px; color: #ff7b7b; cursor: pointer;
+            background: rgba(255,255,255,0.1); width: 35px; height: 35px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .close-modal:hover { background: rgba(255,100,100,0.3); }
+        .testing-notice {
+            background: #ffc107; color: #000; font-weight: bold; padding: 8px 15px; border-radius: 30px;
+            font-size: 13px; text-align: center; margin-bottom: 15px;
+        }
+        .input-with-icon { position: relative; margin: 15px 0; }
+        .input-with-icon i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #b8a0ff; }
+        .input-with-icon input {
+            width: 100%; padding: 13px 45px 13px 18px; background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; color: #fff; font-size: 15px; outline: none;
+        }
+        .modal-btn {
+            width: 100%; padding: 13px; border: none; border-radius: 30px;
+            background: linear-gradient(45deg, #6a4eff, #b845ff); color: #fff; font-weight: bold;
+            cursor: pointer; margin-top: 10px; transition: 0.3s; font-size: 16px;
+        }
+        .modal-btn:hover { box-shadow: 0 0 30px rgba(180,80,255,0.7); }
+        .google-btn { background: #fff !important; color: #333 !important; }
+        .google-btn:hover { box-shadow: 0 0 25px rgba(255,255,255,0.5) !important; }
+        .divider { display: flex; align-items: center; margin: 18px 0; color: #aaa; }
+        .divider span { margin: 0 12px; }
+        .divider:before, .divider:after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.2); }
+
+        /* ========== Toast ========== */
+        .toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: rgba(30,10,50,0.95); color: #fff; padding: 12px 30px; border-radius: 50px;
+            font-weight: bold; z-index: 5000; opacity: 0; transition: 0.4s; pointer-events: none; backdrop-filter: blur(15px);
+        }
+        .toast.show { opacity: 1; bottom: 100px; }
+
+        /* رسالة الصلاة على النبي (تظهر كل 3 ثواني) */
+        .prayer-message {
+            position: fixed; bottom: 20px; left: 20px;
+            background: rgba(255, 0, 0, 0.15); color: #ff4d4d; font-weight: bold; font-size: 20px;
+            padding: 10px 25px; border-radius: 30px; backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,0,0,0.4); z-index: 6000; opacity: 0;
+            transition: opacity 0.5s; pointer-events: none;
+            animation: prayerAnim 3s infinite;
+        }
+        @keyframes prayerAnim {
+            0% { opacity: 0; transform: scale(0.9); }
+            10% { opacity: 1; transform: scale(1); }
+            90% { opacity: 1; }
+            100% { opacity: 0; transform: scale(0.9); }
+        }
+
+        /* تجاوب */
+        @media (max-width: 900px) {
+            .top-bar { width: 97%; padding: 10px 15px; border-radius: 60px; flex-wrap: wrap; gap: 8px; justify-content: center; top: 10px; }
+            .logo img { height: 36px; }
+            .search { min-width: auto; width: 120px; padding: 8px 12px; }
+            .search input { width: 80px; font-size: 12px; }
+            select { padding: 8px 14px; font-size: 12px; }
+            .icon-btn { width: 38px; height: 38px; font-size: 16px; }
+            .capsule-slider { height: 200px; }
+            .product-card { flex: 0 0 230px; }
+            .cart { width: 320px; right: -340px; }
+            .login-modal-box { width: 90%; padding: 25px; }
+            .instagram-float { width: 46px; height: 46px; font-size: 22px; bottom: 20px; right: 15px; }
+            body { padding-top: 100px; }
+        }
+        @media (max-width: 500px) {
+            .top-bar { border-radius: 40px; padding: 8px 10px; gap: 5px; }
+            .logo img { height: 30px; }
+            .search { width: 90px; padding: 6px 10px; }
+            .search input { width: 60px; }
+            .icon-btn { width: 34px; height: 34px; font-size: 14px; }
+            select { padding: 6px 10px; font-size: 11px; }
+            .capsule-slider { height: 150px; }
+            .product-card { flex: 0 0 200px; }
+            .cart { width: 280px; right: -300px; }
+            .instagram-float { width: 42px; height: 42px; font-size: 20px; }
+            body { padding-top: 85px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط العلوي الكبسولي -->
+    <header class="top-bar">
+        <div class="logo">
+            <img src="https://i.postimg.cc/2SVL4q50/white-logo.png" alt="Sudan Store">
+        </div>
+        <div class="nav-links">
+            <div class="search">
+                <i class="fa fa-search"></i>
+                <input type="text" placeholder="بحث...">
+            </div>
+            <select>
+                <option>الكل</option>
+                <option>ويب</option>
+                <option>ارقام</option>
+                <option>حسابات</option>
+            </select>
+            <button class="icon-btn" onclick="openCart()">
+                <i class="fa fa-cart-shopping"></i>
+                <span class="trial-badge">للتجربة فقط</span>
+            </button>
+            <button class="icon-btn" id="loginBtn">
+                <i class="fa fa-user"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- شريط الصور الكبسولي (8 صور جديدة وجميلة) -->
+    <div class="capsule-slider fade-in-up">
+        <div class="capsule-slides" id="capsuleSlides">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=400&fit=crop" alt="ساعة ذكية">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&h=400&fit=crop" alt="سماعات">
+            <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1200&h=400&fit=crop" alt="هاتف">
+            <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=1200&h=400&fit=crop" alt="كاميرا">
+            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1200&h=400&fit=crop" alt="لابتوب">
+            <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=1200&h=400&fit=crop" alt="حذاء رياضي">
+            <img src="https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=1200&h=400&fit=crop" alt="نظارة شمسية">
+            <img src="https://images.unsplash.com/photo-1546868871-af0de0ae72be?w=1200&h=400&fit=crop" alt="جهاز لوحي">
+        </div>
+        <div class="capsule-dots" id="capsuleDots"></div>
+    </div>
+
+    <!-- المنتجات -->
+    <div class="products-section" id="productsContainer"></div>
+
+    <!-- التقييمات -->
+    <div class="reviews-section fade-in-up" style="max-width:1000px; margin:50px auto; padding:0 20px; position:relative; z-index:10;">
+        <h3 style="text-align:center; margin-bottom:25px;">🗣️ ماذا يقول عملاؤنا</h3>
+        <div id="reviewsList"></div>
+        <div class="add-review-box" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.15); border-radius:25px; padding:20px; margin-top:20px;">
+            <h3>أضف تقييمك</h3>
+            <input type="text" id="reviewName" placeholder="اسمك" style="width:100%; padding:12px; margin:8px 0; border-radius:20px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:15px; outline:none;">
+            <textarea id="reviewText" rows="3" placeholder="اكتب تعليقك..." style="width:100%; padding:12px; margin:8px 0; border-radius:20px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:15px; outline:none;"></textarea>
+            <button onclick="addReview()" style="padding:12px 30px; border:none; border-radius:30px; background:linear-gradient(45deg, #6a4eff, #b845ff); color:#fff; font-weight:bold; cursor:pointer;">إرسال التقييم</button>
+        </div>
+    </div>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <div class="payment-icons">
+            <img src="https://i.postimg.cc/gcNMyq6g/98aa1a549ab7b51e9a77a5a4dce9f31d.jpg" alt="Visa">
+            <img src="https://i.postimg.cc/Gpwz3XZb/f5b1430d4f6d312e1a7d5625644bbc88.jpg" alt="Mastercard">
+        </div>
+        <div class="developer-credit">© 2025 جميع الحقوق محفوظة - طور بواسطة <strong>Enzo</strong></div>
+        <div style="color:#ffc107; font-weight:bold; margin-top:8px; font-size:13px;">This site is for testing purposes only.</div>
+    </footer>
+
+    <!-- السلة -->
+    <div class="cart" id="cart">
+        <div class="cart-header">
+            <span>🛒 السلة</span>
+            <span class="close" onclick="closeCart()">×</span>
+        </div>
+        <div class="trial-notice">This site is for testing purposes only.</div>
+        <div class="cart-body" id="cartBody"></div>
+        <div class="total" id="totalDisplay">الإجمالي: 0 جنيه</div>
+        <div class="payment-methods" id="paymentMethods">
+            <label><input type="radio" name="payment" value="ماي كاشي" checked> ماي كاشي</label>
+            <label><input type="radio" name="payment" value="بنكك"> بنكك</label>
+        </div>
+        <a id="tgBtn" class="btn telegram" target="_blank">
+            <i class="fab fa-telegram-plane"></i> شراء عبر تيليجرام
+        </a>
+    </div>
+
+    <!-- نافذة تسجيل الدخول -->
+    <div class="modal" id="loginModal">
+        <div class="login-modal-box">
+            <span class="close-modal" onclick="closeModal('loginModal')">&times;</span>
+            <h2 style="text-align:center; margin-bottom:10px;">أهلاً بعودتك</h2>
+            <div class="testing-notice">This site is for testing purposes only.</div>
+            <button class="modal-btn google-btn" id="googleLoginBtn">
+                <i class="fab fa-google"></i> متابعة باستخدام Google
+            </button>
+            <div class="divider"><span>أو</span></div>
+            <div class="input-with-icon"><i class="fa fa-user"></i><input id="loginName" placeholder="الاسم"></div>
+            <div class="input-with-icon"><i class="fa fa-envelope"></i><input id="loginEmail" placeholder="البريد"></div>
+            <div class="input-with-icon"><i class="fa fa-lock"></i><input type="password" id="loginPassword" placeholder="كلمة المرور"></div>
+            <button class="modal-btn" id="doLoginBtn">تسجيل الدخول</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- رسالة الصلاة على النبي (تظهر كل 3 ثواني) -->
+    <div class="prayer-message" id="prayerMsg">صلي على محمد</div>
+
+    <!-- زر إنستغرام -->
+    <a href="https://www.instagram.com/santos.1ss?igsh=MXB6b2puMmtkNWV5bw==" target="_blank" class="instagram-float" title="تابعنا على إنستغرام">
+        <i class="fab fa-instagram"></i>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        emailjs.init("YsteAsPwfD0B7FZ7F");
+
+        const products = [
+            { name:"آيفون 16 برو", price:4500, oldPrice:5200, desc:"هاتف احترافي بكاميرا 48MP.", img:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400" },
+            { name:"ساعة ذكية X9", price:1200, oldPrice:1500, desc:"مقاومة للماء ومراقبة الصحة.", img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" },
+            { name:"سماعات برو", price:800, oldPrice:1000, desc:"صوت محيطي مع عزل ضوضاء.", img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" },
+            { name:"جهاز لوحي", price:3200, oldPrice:3800, desc:"شاشة 11 بوصة للمبدعين.", img:"https://images.unsplash.com/photo-1546868871-af0de0ae72be?w=400" },
+            { name:"حذاء رياضي", price:950, oldPrice:1200, desc:"خفيف ومريح للجري.", img:"https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400" },
+            { name:"كاميرا فورية", price:1500, oldPrice:1800, desc:"طباعة فورية للصور.", img:"https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400" },
+            { name:"حقيبة ظهر", price:600, oldPrice:750, desc:"مقاومة للماء مع جيب لابتوب.", img:"https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400" },
+            { name:"نظارة شمسية", price:400, oldPrice:500, desc:"حماية UV 400.", img:"https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=400" },
+            { name:"حذاء كلاسيكي", price:1100, oldPrice:1300, desc:"جلد طبيعي أنيق.", img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" },
+            { name:"حافظة هاتف", price:250, oldPrice:300, desc:"حماية متكاملة مع حامل.", img:"https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400" },
+            { name:"مكبر صوت", price:700, oldPrice:850, desc:"صوت محيطي Bass قوي.", img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400" },
+            { name:"شاحن لاسلكي", price:350, oldPrice:400, desc:"شحن سريع 15W.", img:"https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400" },
+            { name:"ماوس ألعاب", price:550, oldPrice:650, desc:"7 أزرار قابلة للبرمجة.", img:"https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=400" },
+            { name:"كيبورد RGB", price:900, oldPrice:1100, desc:"مفاتيح ميكانيكية سريعة.", img:"https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=400" },
+            { name:"نظارة VR", price:2200, oldPrice:2600, desc:"تجربة غامرة 4K.", img:"https://images.unsplash.com/photo-1544816155-12df9643f363?w=400" },
+            { name:"درون 4K", price:3800, oldPrice:4200, desc:"كاميرا احترافية وتحكم بالهاتف.", img:"https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=400" },
+            { name:"سماعة ألعاب", price:650, oldPrice:800, desc:"ميكروفون عالي الجودة.", img:"https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400" },
+            { name:"باور بانك", price:300, oldPrice:350, desc:"سعة 20000mAh.", img:"https://images.unsplash.com/photo-1510017803434-a899398421b3?w=400" }
+        ];
+
+        const reviews = [
+            { name:"أحمد محمد", text:"متجر رائع وسرعة في التوصيل. المنتج أصلي 👌", icon:"👤" },
+            { name:"سارة علي", text:"جودة عالية وسعر مناسب. شكراً Sudan Store 💜", icon:"👩" },
+            { name:"خالد وليد", text:"تجربة شراء ممتازة وخدمة عملاء محترمة.", icon:"👨" },
+            { name:"نورا حسن", text:"أفضل متجر إلكتروني في السودان بلا منازع.", icon:"👩‍🦰" },
+            { name:"محمد عثمان", text:"التوصيل كان في نفس اليوم! منجد أساطير.", icon:"🧔" }
+        ];
+
+        // بناء المنتجات
+        const container = document.getElementById('productsContainer');
+        for(let i=0; i<products.length; i+=6) {
+            const row = document.createElement('div');
+            row.className = 'products-row fade-in-up';
+            products.slice(i, i+6).forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="event.stopPropagation(); changeProductQty('${p.name}', -1, this)">−</button>
+                        <span class="qty-val" id="qty-${p.name.replace(/\s/g,'')}">1</span>
+                        <button class="qty-btn" onclick="event.stopPropagation(); changeProductQty('${p.name}', 1, this)">+</button>
+                    </div>
+                    <img src="${p.img}" alt="${p.name}" loading="lazy">
+                    <div class="card-content">
+                        <div class="product-title">${p.name}</div>
+                        <div class="price">
+                            <span class="new-price">${p.price} جنيه</span>
+                            ${p.oldPrice ? `<span class="old-price">${p.oldPrice} جنيه</span>` : ''}
+                        </div>
+                        <div class="desc">${p.desc}</div>
+                        <button class="buy-btn" onclick="addItem('${p.name}', ${p.price})">🛒 أضف إلى السلة</button>
+                    </div>
+                `;
+                row.appendChild(card);
+            });
+            container.appendChild(row);
+        }
+
+        window.changeProductQty = function(name, delta, btn) {
+            const valSpan = btn.parentElement.querySelector('.qty-val');
+            let val = parseInt(valSpan.textContent);
+            val = Math.max(1, val + delta);
+            valSpan.textContent = val;
+        };
+
+        // التقييمات
+        function renderReviews() {
+            const list = document.getElementById('reviewsList');
+            list.innerHTML = reviews.map(r => `
+                <div class="review-card fade-in-up" style="background:rgba(255,255,255,0.06); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.15); border-radius:25px; padding:20px; margin-bottom:15px; display:flex; gap:15px; align-items:center;">
+                    <div style="width:55px; height:55px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:26px; color:#b8a0ff;">${r.icon}</div>
+                    <div>
+                        <div style="font-weight:bold;">${r.name}</div>
+                        <div style="color:#ffc107;">⭐⭐⭐⭐⭐</div>
+                        <div>${r.text}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        renderReviews();
+
+        window.addReview = function() {
+            const name = document.getElementById('reviewName').value.trim();
+            const text = document.getElementById('reviewText').value.trim();
+            if(!name || !text) return showToast('الرجاء ملء جميع الحقول');
+            reviews.unshift({name, text, icon:'👤'});
+            renderReviews();
+            document.getElementById('reviewName').value = '';
+            document.getElementById('reviewText').value = '';
+            showToast('تم إضافة تقييمك بنجاح ✅');
+        };
+
+        // شريط الصور الكبسولي (8 صور)
+        const capsuleSlides = document.getElementById('capsuleSlides');
+        const capsuleDotsContainer = document.getElementById('capsuleDots');
+        const totalCapsuleSlides = 8;
+        let currentCapsule = 0;
+        for(let i=0; i<totalCapsuleSlides; i++) {
+            const dot = document.createElement('span');
+            if(i===0) dot.className = 'active';
+            dot.addEventListener('click', ()=> goToCapsuleSlide(i));
+            capsuleDotsContainer.appendChild(dot);
+        }
+        function goToCapsuleSlide(index) {
+            currentCapsule = index;
+            capsuleSlides.style.transform = `translateX(-${currentCapsule * 100}%)`;
+            document.querySelectorAll('.capsule-dots span').forEach((d,i)=> d.classList.toggle('active', i===index));
+        }
+        setInterval(()=> {
+            currentCapsule = (currentCapsule + 1) % totalCapsuleSlides;
+            goToCapsuleSlide(currentCapsule);
+        }, 4000);
+
+        // السلة
+        let cart=[], total=0;
+        const tgBtn = document.getElementById('tgBtn');
+        const paymentMethodsDiv = document.getElementById('paymentMethods');
+
+        window.addItem = function(name, price) {
+            const qtyEl = document.getElementById(`qty-${name.replace(/\s/g,'')}`);
+            const qtyToAdd = qtyEl ? parseInt(qtyEl.textContent) : 1;
+            const found = cart.find(i=>i.name===name);
+            if(found) found.qty+=qtyToAdd;
+            else cart.push({name, price, qty:qtyToAdd});
+            updateCart();
+            showToast(`✅ تمت إضافة "${name}" (${qtyToAdd}x)`);
+        };
+
+        function getSelectedPayment() {
+            const sel = document.querySelector('input[name="payment"]:checked');
+            return sel ? sel.value : 'ماي كاشي';
+        }
+
+        function getInvoiceText(method) {
+            if(cart.length===0) return "اريد الطلب من موقعكم";
+            let text = "🧾 *فاتورة طلب* %0A%0A";
+            cart.forEach(item=> text += `• ${item.name} ← ${item.qty}x = ${item.price*item.qty} جنيه%0A`);
+            text += "%0A-----------------%0A";
+            text += `💰 *الإجمالي:* ${total} جنيه%0A`;
+            text += `💳 *الدفع عبر:* ${method}`;
+            return text;
+        }
+
+        function updateCart() {
+            const body = document.getElementById('cartBody');
+            total = cart.reduce((s,i)=> s + i.price*i.qty, 0);
+            if(cart.length===0) {
+                body.innerHTML = '<div style="text-align:center; padding:40px; color:#aaa;">السلة فارغة 🛒</div>';
+                paymentMethodsDiv.style.display = 'none';
+                tgBtn.style.display = 'none';
+            } else {
+                body.innerHTML = cart.map((item,i)=> `
+                    <div class="item fade-in-up">
+                        <span>${item.name}<br><small>${item.price} جنيه</small></span>
+                        <div class="qty">
+                            <button onclick="changeQty(${i},-1)">−</button>
+                            <span>${item.qty}</span>
+                            <button onclick="changeQty(${i},1)">+</button>
+                        </div>
+                    </div>
+                `).join('');
+                paymentMethodsDiv.style.display = 'flex';
+                tgBtn.style.display = 'block';
+            }
+            document.getElementById('totalDisplay').innerText = `الإجمالي: ${total} جنيه`;
+            const method = getSelectedPayment();
+            const invoice = encodeURIComponent(getInvoiceText(method));
+            tgBtn.href = `https://t.me/Sudan_store_5?text=${invoice}`;
+        }
+
+        window.changeQty = (i,v)=> {
+            cart[i].qty+=v;
+            if(cart[i].qty<=0) cart.splice(i,1);
+            updateCart();
+        };
+
+        document.addEventListener('change', e=> { if(e.target.name==='payment') updateCart(); });
+
+        window.openCart = ()=> document.getElementById('cart').classList.add('active');
+        window.closeCart = ()=> document.getElementById('cart').classList.remove('active');
+
+        tgBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showToast('جاري تحويلك إلى تيليجرام...', 3000);
+            setTimeout(()=> window.open(tgBtn.href, '_blank'), 3000);
+        });
+
+        // تسجيل الدخول
+        window.openModal = id => document.getElementById(id).classList.add('active');
+        window.closeModal = id => document.getElementById(id).classList.remove('active');
+        document.getElementById('loginBtn').addEventListener('click', ()=> openModal('loginModal'));
+        document.getElementById('googleLoginBtn').addEventListener('click', ()=> {
+            closeModal('loginModal');
+            showToast('✅ تم تسجيل الدخول بحساب Google بنجاح!');
+        });
+        document.getElementById('doLoginBtn').addEventListener('click', ()=> {
+            const name = document.getElementById('loginName').value.trim();
+            if(name.length<3) return showToast('الاسم يجب أن يكون 3 أحرف على الأقل');
+            closeModal('loginModal');
+            showToast('تم تسجيل الدخول بنجاح 👋');
+        });
+
+        // Toast
+        function showToast(msg, d=3000) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(()=> t.classList.remove('show'), d);
+        }
+
+        // تأثيرات الظهور
+        const observer = new IntersectionObserver(entries=> {
+            entries.forEach(entry=> { if(entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, {threshold:0.1});
+        document.querySelectorAll('.fade-in-up').forEach(el=> observer.observe(el));
+        new MutationObserver(()=> {
+            document.querySelectorAll('.fade-in-up:not(.visible)').forEach(el=> observer.observe(el));
+        }).observe(document.body, {childList:true, subtree:true});
+
+        updateCart();
+    </script>
+</body>
+</html>
